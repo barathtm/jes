@@ -1,4 +1,4 @@
-name: Run JESftp Script on Windows
+name: Run JESftp.py script
 
 on:
   push:
@@ -14,20 +14,14 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v2
         with:
           python-version: '3.x'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          # If you have a requirements.txt file, uncomment the next line:
-          # pip install -r requirements.txt
-
       - name: Run JESftp.py script
-        run: |
-          python "C:\Windows\System32\actions_jes\JESftp.py" "C:\Windows\System32\actions_jes\JCL"
         working-directory: C:\Windows\System32\actions_jes
+        run: |
+          python JESftp.py JCL
