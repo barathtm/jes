@@ -30,4 +30,4 @@ jobs:
       - name: Run JESftp.py script
         run: |
           python "C:\Windows\System32\actions_jes\JESftp.py" "C:\Windows\System32\actions_jes\JCL"
-        working-directory: "C:\Windows\System32\actions_jes"
+        working-directory: C:\Windows\System32\actions_jes
