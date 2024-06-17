@@ -22,6 +22,6 @@ jobs:
           python-version: '3.x'
 
       - name: Run JESftp.py script
-        working-directory: C:\Windows\System32\actions_jes
+        working-directory: C:\Windows\System32\actions_jes\
         run: |
           python JESftp.py JCL
