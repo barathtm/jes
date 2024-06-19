@@ -29,5 +29,5 @@ jobs:
 
       - name: Run JESftp.py script
         run: |
-          python "C:\Windows\actions-jes\JESftp.py" "C:\Windows\actions-jes\JCL"
-        working-directory: C:\Windows\
+          python "C:\Windows\actions-jes\JESftp.py" "C:\Windows\actions-jes\JCL"shell:pwsh
+        #working-directory: C:\Windows\
