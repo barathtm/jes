@@ -28,5 +28,4 @@ jobs:
           # pip install -r requirements.txt
 
       - name: Run JESftp.py script
-        run: |
-          python "C:\Barath\Complete\GitHub_Repos\jes\JESftp.py" "C:\Barath\Complete\GitHub_Repos\jes\JCL"
+        run: python ./JESftp.py ./JCL
