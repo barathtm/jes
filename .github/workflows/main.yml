@@ -46,20 +46,27 @@ jobs:
     runs-on: windows-latest
  
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+ 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
  
-      - name: Debug: List directory contents
+      - name: Debug List all environment variables
+        run: Get-ChildItem Env
+        shell: pwsh
+ 
+      - name: Debug List directory contents
         run: dir "C:\Windows\actions-jes"
         shell: pwsh
  
-      - name: Debug: Print working directory
-        run: pwd
+      - name: Debug Print current user
+        run: whoami
         shell: pwsh
  
-      - name: Debug: Check Python version
+      - name: Debug Check Python version
         run: python --version
         shell: pwsh
  
