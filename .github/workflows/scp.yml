@@ -1,0 +1,52 @@
+name: JESftp Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+      
+jobs:
+  run-jesftp:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Copy scripts and files to Linux machine
+      run: |
+        scp -o StrictHostKeyChecking=no JESftp.py user@10.10.1.180:/home/ibmsys1/JESftp/
+        scp -o StrictHostKeyChecking=no JCL user@10.10.1.180:/home/ibmsys1/JESftp/
+        scp -o StrictHostKeyChecking=no .JESftp.cfg user@10.10.1.180:/home/ibmsys1/JESftp/
+
+    - name: Execute script on Linux machine
+      run: |
+        ssh -o StrictHostKeyChecking=no user@10.10.1.180 << 'EOF'
+        cd /home/ibmsys1/JESftp/
+        python3 JESftp.py JCL
+        mv *output* /home/ibmsys1/JESftp/output.txt
+        EOF
+
+    - name: Retrieve output from Linux machine
+      run: |
+        scp -o StrictHostKeyChecking=no user@10.10.1.180:/home/ibmsys1/JESftp/output.txt .
+
+    - name: Upload output to GitHub
+      uses: actions/upload-artifact@v2
+      with:
+        name: JESftp-output
+        path: output.txt
+
+    - name: Clean up files on Linux machine
+      run: |
+        ssh -o StrictHostKeyChecking=no user@10.10.1.180 << 'EOF'
+        rm -rf /home/ibmsys1/JESftp/
+        EOF
