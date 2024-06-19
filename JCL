@@ -1,0 +1,14 @@
+//ADCDH1 JOB 1,'CREATEPS',CLASS=A,MSGCLASS=X,NOTIFY=&SYSUID 
+//*                                                         
+//**********************************************************
+//* CREATE PS FB FILE                                       
+//**********************************************************
+//STEP01   EXEC PGM=IEFBR14                                 
+//SYSPRINT DD SYSOUT=*                                      
+//SYSOUT   DD SYSOUT=*                                      
+//SYSDUMP  DD SYSOUT=*                                      
+//DD1      DD DSN=ADCDH.TEST.PSFB,                          
+//            DISP=(NEW,CATLG,DELETE),                      
+//            SPACE=(TRK,(10,5)),                           
+//            DCB=(RECFM=FB,LRECL=80,BLKSIZE=800)           
+//*                 
