@@ -117,8 +117,7 @@ class JESftp:
 
         with open(outfile, 'wb') as outputFile:
             # Lambda ensures newline at the end of each line
-            self.ftp.retrlines("RETR " + JOBID + ".x", lambda line: outputFile.write(line + self._newline))
-
+            self.ftp.retrlines("RETR " + JOBID + ".x", lambda line: outputFile.write((line + self._newline).encode('utf-8')))
     def deleteJob(self, JOBID):
         '''Deletes the specified job off the JES.
       
@@ -205,7 +204,7 @@ class JESftp:
         infileBN = os.path.basename(infile)
         
         if outfile == None:
-            outfile = os.path.dirname(infile) + "/" + self.changeExt(infileBN, self._outfile_ext, self._outfile_pfx)
+            outfile = os.path.dirname(infile) + "/" + JESftp.changeExt(infileBN, self._outfile_ext, self._outfile_pfx)
         else:
             outfile = os.path.abspath(outfile)
             
@@ -330,8 +329,8 @@ class JESftp:
         self.ftp.close()
 
 #######################################################################
-
-    def changeExt(self, fname, ext, prefix=None):
+    @staticmethod
+    def changeExt(fname, ext, prefix=None):
         '''Changes the extension of a filename string to something else.
         
         fname
