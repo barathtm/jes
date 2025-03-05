@@ -1,27 +1,27 @@
 #!/usr/bin/env python
 
 ##VERSIONING##
-#VER="v1.0"
-#VERSION()
-#{
-#        echo $VER
-#}
+VER="v1.0"
+VERSION()
+{
+        echo $VER
+}
 
-# while getopts ":version" option; do
-#    case "$option" in
-#       v) VERSION
-# 	 exit
-#        ;;
-#        \?) echo "[-v  for version]"
-# 	   exit
-#        ;;
-#    esac
-# done
+while getopts ":version" option; do
+   case "$option" in
+      v) VERSION
+	 exit
+       ;;
+       \?) echo "[-v  for version]"
+	   exit
+       ;;
+   esac
+done
 
 
 
 from ftplib import FTP, Error, error_perm
-import re, os, sys, time, configparser, getpass
+import re, os, sys, time, ConfigParser, getpass
 
 class JESftpError(Exception): pass
 
@@ -270,12 +270,12 @@ class JESftp:
       
       
       # Submit file
-      print("Sending " + infileBN + " to the job entry subsystem.")
+      print "Sending " + infileBN + " to the job entry subsystem."
       JOBID = self.submitJob(infile)
       
 
       # Wait a moment for the mainframe to process the file
-      print("Waiting for completion of " + JOBID + "...")
+      print "Waiting for completion of " + JOBID + "..."
       time.sleep(1)
       
       
@@ -284,20 +284,20 @@ class JESftp:
       
          try:
             self.retrieveJob(JOBID, outfile)
-            print("Downloaded " + JOBID + " to " + outfileBN)
+            print "Downloaded " + JOBID + " to " + outfileBN
             break
             
          except error_perm as e:
             # If the server doesn't know about the job, wait awhile to try again.
-            print("")
-            print(e)
-            print("")
+            print ""
+            print e
+            print ""
             self.ftp.retrlines("LIST " + JOBID)
             time.sleep(5)
       
       # Delete the job
       self.deleteJob(JOBID)
-      print("Deleted " + JOBID)
+      print "Deleted " + JOBID
       
       
       return outfile
@@ -328,7 +328,7 @@ class JESftp:
       
       
       # Attempt to read config file.
-      config = configparser.RawConfigParser()
+      config = ConfigParser.RawConfigParser()
       
       if len(config.read(filename)) != 1:
          raise JESftpError("Could not parse (or read) configuration file")
@@ -338,9 +338,9 @@ class JESftp:
          self.username = config.get(self._conf_sect, 'username')
          self.password = config.get(self._conf_sect, 'password')
          self.server   = config.get(self._conf_sect, 'server')
-      except configparser.NoSectionError as e:
-         print("Error in config file... "),
-         print(e)
+      except ConfigParser.NoSectionError as e:
+         print "Error in config file... ",
+         print e
          return
       
       # TODO: Validation
@@ -362,7 +362,7 @@ class JESftp:
       '''
       
       # Create new config object
-      config = configparser.RawConfigParser()
+      config = ConfigParser.RawConfigParser()
       
       # Obtain needed config values from stdin
       server = raw_input("Host [10.1.1.2]: ")
@@ -390,11 +390,11 @@ class JESftp:
       # Write config to file
       with open(path, 'wb') as configfile:
          config.write(configfile)
-         print("Config file written to " + path)
+         print "Config file written to " + path
       
       if os.name != 'nt':
-         os.chmod(path,0o600)
-         print("Config file permissions changed to 0600")
+         os.chmod(path,0600)
+         print "Config file permissions changed to 0600"
       
       self.username = username
       self.password = password
@@ -492,10 +492,10 @@ if __name__ == '__main__':
               jes.processJobOutput(outfile)
        
     except JESftpError as e:
-       print(e)
+       print e
 
     except IOError as e:
-       print(e)
+       print e
        
        
 # END
