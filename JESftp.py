@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+VERSION = "v1.1" # Python3 Converted
+
+def print_version():
+    print(VERSION)
+
 from ftplib import FTP, Error, error_perm
 import re, os, sys, time, configparser, getpass
 
@@ -118,6 +123,7 @@ class JESftp:
         with open(outfile, 'wb') as outputFile:
             # Lambda ensures newline at the end of each line
             self.ftp.retrlines("RETR " + JOBID + ".x", lambda line: outputFile.write((line + self._newline).encode('utf-8')))
+
     def deleteJob(self, JOBID):
         '''Deletes the specified job off the JES.
       
@@ -329,6 +335,7 @@ class JESftp:
         self.ftp.close()
 
 #######################################################################
+
     @staticmethod
     def changeExt(fname, ext, prefix=None):
         '''Changes the extension of a filename string to something else.
@@ -382,23 +389,29 @@ if __name__ == '__main__':
     parser.add_argument("-o", metavar="outfile", help="the outfile", default=None)
     parser.add_argument("--config", metavar="config_file", help="Read config from the specified file.", default=None)
     parser.add_argument("--postproc", action="store_true", help="Do additional processing on the job output.", default=False)
-    parser.add_argument("JCLFile", help="The JCL file to send")
+    parser.add_argument("-v", "--version", action="store_true", help="Display version information")
+    parser.add_argument("JCLFile", nargs="?", help="The JCL file to send")
     args = parser.parse_args()
 
-    jclPath = os.path.abspath(args.JCLFile)
-    outfile = args.o
-    
-    try:
-        with JESftp() as jes:
-            jes.loadConfig(createOnFail=True, filename=args.config)
-            jes.connect()
-            outfile = jes.processJob(jclPath, outfile)
-            
-            if args.postproc == True:
-                jes.processJobOutput(outfile)
-    except JESftpError as e:
-        print(e)
-    except IOError as e:
-        print(e)
+    if args.version:
+        print_version()
+        sys.exit()
+
+    if args.JCLFile:
+        jclPath = os.path.abspath(args.JCLFile)
+        outfile = args.o
+        
+        try:
+            with JESftp() as jes:
+                jes.loadConfig(createOnFail=True, filename=args.config)
+                jes.connect()
+                outfile = jes.processJob(jclPath, outfile)
+                
+                if args.postproc == True:
+                    jes.processJobOutput(outfile)
+        except JESftpError as e:
+            print(e)
+        except IOError as e:
+            print(e)
 
 # END
